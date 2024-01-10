@@ -19,7 +19,6 @@ import (
 // @contact.email fiber@swagger.io
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host localhost:6969
 // @BasePath /
 func getPort() string {
 	port := os.Getenv("PORT")
