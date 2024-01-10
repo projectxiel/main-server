@@ -28,4 +28,39 @@ Point is, no one uses that crap, we use 2s compliment, which as stated before al
 
 The only thing to keep in mind is that because you have negative numbers, you can only represent half the number of positive values as opposed to unsigned numbers. In an unsigned 8 bit integer the highest number you can express is 255, but a signed 8 bit number can only express -128 to 127, this is still 256 values, but half of the values are negative.
 
-Now lets talk a little about binary addition
+Now lets talk a little about binary addition and subtraction.
+
+Binary addition works bit by bit, starting from the rightmost bit (the least significant bit), this should seem familiar since its essentially the same way as demical addition with a few changes. The rules are straightforward:
+- *0 + 0* gives *0*.
+- *0 + 1* or *1 + 0* gives *1*.
+- *1 + 1* gives *0* and produces a carry of *1* to the next higher bit.
+
+For example, if we add 00001111 and 00000001, it results in 00010000. This is similar to decimal addition but with only two digits (0 and 1).
+
+So what if we run out of bits, what happens? 
+
+## Arithmetic Overflows and Underflows
+Well, lets try this, in the following code, `1` has been added to a 8-bit unsigned integer with a value of `255`, and it turns the value into `0`. This is known as an overflow, because once we run out of bits, the integer wraps around to 0.
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var num uint8 = 255
+	fmt.Println(num + 1)
+}
+```
+The opposite is true aswell, in the following code we've subtracted `1` from an 8-bit unsigned integer with a value of `0`, and it turns the value into `11111111` or `255`. This is known as an underflow, and in this case the integer wraps around to its maximum value.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var num uint8 = 0
+	fmt.Println(num - 1)
+}
+```
+
