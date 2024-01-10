@@ -1,0 +1,78 @@
+basePath: /
+definitions:
+  data.Post:
+    properties:
+      content:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      slug:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+    type: object
+host: localhost:6969
+info:
+  contact:
+    email: fiber@swagger.io
+    name: API Support
+  description: Main API for the ProjectXiel website
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: ProjectXiel API
+  version: "1.0"
+paths:
+  /post/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: get post by slug
+      parameters:
+      - description: Post Slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.Post'
+      summary: Get a single post
+      tags:
+      - Post
+  /posts:
+    get:
+      consumes:
+      - application/json
+      description: get posts
+      parameters:
+      - description: Posts Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Posts page
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.Post'
+      summary: Get all posts
+      tags:
+      - Post
+swagger: "2.0"
