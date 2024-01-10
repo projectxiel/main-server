@@ -1,5 +1,3 @@
-# Bit Manipulation
-
 ## Bits in the hardware
 
 At the lowest level computers have circuits, and through these circuits flows electricity. A bit in the context of digital computing can be thought of as representing either the absence or presence of an electrical current through a circuit.

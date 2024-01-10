@@ -1,5 +1,3 @@
-# The Purpose Behind This All
-
 My intentions for this resources page are pretty straightforward and simple. This dedicated space allows me, and potentially others, to share information and ideas relating to programming. Unlike social media platforms, which I find somewhat abhorent, this resources page offers a more structured, and less distracting, way of sharing information.
 
 My journey through various creative fields, and mediums - from aspiring author to visual artist, YouTuber, and designer has culminated in a profound love for creation as a whole, with programming at its core. This page is an extension of that passion, a place where I can express some of my thoughts, experiences, and discoveries when it relates to coding.

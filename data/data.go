@@ -7,6 +7,7 @@ import (
 	"os"
 	"reflect"
 	"strconv"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -77,13 +78,14 @@ func QueryAndScan(ctx context.Context, query string, dest interface{}, args ...i
 }
 
 type Post struct {
-	ID          int32  `json:"id"`
-	Title       string `json:"title"`
-	Content     string `json:"content"`
-	Type        string `json:"type"`
-	Description string `json:"description"`
-	ImageUrl    string `json:"image_url"`
-	Slug        string `json:"slug"`
+	ID          int32     `json:"id"`
+	Title       string    `json:"title"`
+	Content     string    `json:"content"`
+	Type        string    `json:"type"`
+	Description string    `json:"description"`
+	ImageUrl    string    `json:"image_url"`
+	Slug        string    `json:"slug"`
+	DateCreated time.Time `json:"date_created"`
 }
 
 func GetSinglePost(slug string) *Post {
