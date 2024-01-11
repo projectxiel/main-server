@@ -7,10 +7,11 @@ import (
 	"github.com/gofiber/swagger"
 )
 
-
 func Routes(app *fiber.App) {
-	app.Get("/post/:slug", handlers.GetSinglePost)
-	app.Get("/posts", handlers.GetAllPosts)
 	app.Static("/", "./public")
 	app.Get("/swagger/*", swagger.HandlerDefault)
+	app.Get("/youtube/videos", handlers.FetchYouTubeVideos)
+	app.Get("/post/:slug", handlers.GetSinglePost)
+	app.Get("/posts", handlers.GetAllPosts)
+
 }

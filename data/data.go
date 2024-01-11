@@ -136,3 +136,7 @@ func GetAllPosts(args ...string) ([]*Post, error) {
 
 	return posts, nil
 }
+
+func Query(input string, args ...interface{}) {
+	db.Query(ctx, input, args...)
+}

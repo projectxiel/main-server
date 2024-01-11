@@ -34,7 +34,6 @@ func main() {
 	app := fiber.New()
 	app.Use(cors.New())
 	app.Use(logger.New())
-	// app.Use(cache.New(cache.Config{Expiration: time.Hour * 24}))
 	routes.Routes(app)
 	log.Fatal(app.Listen(getPort()))
 }

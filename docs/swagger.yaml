@@ -1,8 +1,17 @@
 basePath: /
 definitions:
+  data.PageInfo:
+    properties:
+      resultsPerPage:
+        type: integer
+      totalResults:
+        type: integer
+    type: object
   data.Post:
     properties:
       content:
+        type: string
+      date_created:
         type: string
       description:
         type: string
@@ -16,6 +25,78 @@ definitions:
         type: string
       type:
         type: string
+    type: object
+  data.Thumbnail:
+    properties:
+      height:
+        type: integer
+      url:
+        type: string
+      width:
+        type: integer
+    type: object
+  data.YouTubeID:
+    properties:
+      channelId:
+        type: string
+      kind:
+        type: string
+      videoId:
+        type: string
+    type: object
+  data.YouTubeItem:
+    properties:
+      etag:
+        type: string
+      id:
+        $ref: '#/definitions/data.YouTubeID'
+      kind:
+        type: string
+      snippet:
+        $ref: '#/definitions/data.YouTubeSnippet'
+    type: object
+  data.YouTubeResponse:
+    properties:
+      etag:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/data.YouTubeItem'
+        type: array
+      kind:
+        type: string
+      pageInfo:
+        $ref: '#/definitions/data.PageInfo'
+      regionCode:
+        type: string
+    type: object
+  data.YouTubeSnippet:
+    properties:
+      channelId:
+        type: string
+      channelTitle:
+        type: string
+      description:
+        type: string
+      liveBroadcastContent:
+        type: string
+      publishTime:
+        type: string
+      publishedAt:
+        type: string
+      thumbnails:
+        $ref: '#/definitions/data.YouTubeThumbnails'
+      title:
+        type: string
+    type: object
+  data.YouTubeThumbnails:
+    properties:
+      default:
+        $ref: '#/definitions/data.Thumbnail'
+      high:
+        $ref: '#/definitions/data.Thumbnail'
+      medium:
+        $ref: '#/definitions/data.Thumbnail'
     type: object
 info:
   contact:
@@ -74,4 +155,19 @@ paths:
       summary: Get all posts
       tags:
       - Post
+  /youtube/videos:
+    get:
+      consumes:
+      - application/json
+      description: Fetches a list of YouTube videos from a specific channel.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: A list of YouTube videos
+          schema:
+            $ref: '#/definitions/data.YouTubeResponse'
+      summary: Fetch YouTube videos
+      tags:
+      - YouTube
 swagger: "2.0"

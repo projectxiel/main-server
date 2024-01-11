@@ -84,13 +84,50 @@
                     }
                 }
             }
+        },
+        "/youtube/videos": {
+            "get": {
+                "description": "Fetches a list of YouTube videos from a specific channel.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "YouTube"
+                ],
+                "summary": "Fetch YouTube videos",
+                "responses": {
+                    "200": {
+                        "description": "A list of YouTube videos",
+                        "schema": {
+                            "$ref": "#/definitions/data.YouTubeResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "data.PageInfo": {
+            "type": "object",
+            "properties": {
+                "resultsPerPage": {
+                    "type": "integer"
+                },
+                "totalResults": {
+                    "type": "integer"
+                }
+            }
+        },
         "data.Post": {
             "type": "object",
             "properties": {
                 "content": {
+                    "type": "string"
+                },
+                "date_created": {
                     "type": "string"
                 },
                 "description": {
@@ -110,6 +147,117 @@
                 },
                 "type": {
                     "type": "string"
+                }
+            }
+        },
+        "data.Thumbnail": {
+            "type": "object",
+            "properties": {
+                "height": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "width": {
+                    "type": "integer"
+                }
+            }
+        },
+        "data.YouTubeID": {
+            "type": "object",
+            "properties": {
+                "channelId": {
+                    "type": "string"
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "videoId": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.YouTubeItem": {
+            "type": "object",
+            "properties": {
+                "etag": {
+                    "type": "string"
+                },
+                "id": {
+                    "$ref": "#/definitions/data.YouTubeID"
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "snippet": {
+                    "$ref": "#/definitions/data.YouTubeSnippet"
+                }
+            }
+        },
+        "data.YouTubeResponse": {
+            "type": "object",
+            "properties": {
+                "etag": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/data.YouTubeItem"
+                    }
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "pageInfo": {
+                    "$ref": "#/definitions/data.PageInfo"
+                },
+                "regionCode": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.YouTubeSnippet": {
+            "type": "object",
+            "properties": {
+                "channelId": {
+                    "type": "string"
+                },
+                "channelTitle": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "liveBroadcastContent": {
+                    "type": "string"
+                },
+                "publishTime": {
+                    "type": "string"
+                },
+                "publishedAt": {
+                    "type": "string"
+                },
+                "thumbnails": {
+                    "$ref": "#/definitions/data.YouTubeThumbnails"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.YouTubeThumbnails": {
+            "type": "object",
+            "properties": {
+                "default": {
+                    "$ref": "#/definitions/data.Thumbnail"
+                },
+                "high": {
+                    "$ref": "#/definitions/data.Thumbnail"
+                },
+                "medium": {
+                    "$ref": "#/definitions/data.Thumbnail"
                 }
             }
         }
