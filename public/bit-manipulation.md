@@ -31,16 +31,16 @@ The only thing to keep in mind is that because you have negative numbers, you ca
 Now lets talk a little about binary addition and subtraction.
 
 Binary addition works bit by bit, starting from the rightmost bit (the least significant bit), this should seem familiar since its essentially the same way as demical addition with a few changes. The rules are straightforward:
-- *0 + 0* gives *0*.
-- *0 + 1* or *1 + 0* gives *1*.
-- *1 + 1* gives *0* and produces a carry of *1* to the next higher bit.
+- **0 + 0** gives **0**.
+- **0 + 1** or **1 + 0** gives **1**.
+- **1 + 1** gives **0** and produces a carry of **1** to the next higher bit.
 
-For example, if we add 00001111 and 00000001, it results in 00010000. This is similar to decimal addition but with only two digits (0 and 1).
+For example, if we add `00001111` and `00000001`, it results in `00010000`. This is similar to decimal addition but with only two digits `(0 and 1)`.
 
 So what if we run out of bits, what happens? 
 
 ## Arithmetic Overflows and Underflows
-Well, lets try this, in the following code, `1` has been added to a 8-bit unsigned integer with a value of `255`, and it turns the value into `0`. This is known as an overflow, because once we run out of bits, the integer wraps around to 0.
+Well, lets try this, in the following code, `1` has been added to a 8-bit unsigned integer with a value of `255`, and it turns the value into `0`. This is known as an overflow, because once we run out of bits, the integer wraps around to `0`.
 ```go
 package main
 

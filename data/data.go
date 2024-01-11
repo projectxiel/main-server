@@ -117,18 +117,18 @@ func GetAllPosts(args ...string) ([]*Post, error) {
 				}
 			}
 			page-- //Decrement page to make sure the offset is 1 less than the page
-			err = QueryAndScan(ctx, "SELECT * FROM posts LIMIT $1 OFFSET $2", &posts, limit, page*limit)
+			err = QueryAndScan(ctx, "SELECT * FROM posts LIMIT $1 OFFSET $2 ORDER BY id", &posts, limit, page*limit)
 			if err != nil {
 				return posts, err
 			}
 		} else {
-			err := QueryAndScan(ctx, "SELECT * FROM posts", &posts)
+			err := QueryAndScan(ctx, "SELECT * FROM posts ORDER BY id", &posts)
 			if err != nil {
 				return posts, err
 			}
 		}
 	} else {
-		err := QueryAndScan(ctx, "SELECT * FROM posts", &posts)
+		err := QueryAndScan(ctx, "SELECT * FROM posts ORDER BY id", &posts)
 		if err != nil {
 			return posts, err
 		}
