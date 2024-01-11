@@ -58,12 +58,13 @@ func GetAllPosts(c *fiber.Ctx) error {
 // @Router       /youtube/videos [get]
 func FetchYouTubeVideos(c *fiber.Ctx) error {
 	cacheFile := "cache/youtube-videos.json"
+	cacheURL := "/static/youtube-videos.json" // URL path for the static file
 
 	// Check if cached file exists and is valid
 	if fileInfo, err := os.Stat(cacheFile); err == nil {
-		if time.Since(fileInfo.ModTime()) < time.Hour*24 { // Example: 24 hours cache
-			// Serve from cache
-			return c.SendFile(cacheFile)
+		if time.Since(fileInfo.ModTime()) < time.Hour*24 {
+			// Redirect to static route
+			return c.Redirect(cacheURL)
 		}
 	}
 	var ChannelID = os.Getenv("CHANNEL_ID")
