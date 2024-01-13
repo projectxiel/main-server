@@ -48,6 +48,29 @@ func GetAllPosts(c *fiber.Ctx) error {
 	return c.JSON(d)
 }
 
+// SearchPosts godoc
+// @Summary      Search Posts by title
+// @Description  get posts containing title
+// @Tags         Post
+// @Accept       json
+// @Produce      json
+// @Param        title query     string true "Post title"
+// @Param        limit query      int false "Posts Limit"
+// @Param 		 page query 		int false "Posts page"
+// @Success      200  {object}  data.Post
+// @Router       /posts/search [get]
+func SearchPosts(c *fiber.Ctx) error {
+	m := c.Queries()
+	title := m["title"]
+	limit := m["limit"]
+	page := m["page"]
+	d, err := data.SearchPosts(title, limit, page)
+	if err != nil {
+		return c.JSON(err)
+	}
+	return c.JSON(d)
+}
+
 // FetchYouTubeVideos godoc
 // @Summary      Fetch YouTube videos
 // @Description  Fetches a list of YouTube videos from a specific channel.

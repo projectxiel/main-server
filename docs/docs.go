@@ -92,6 +92,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/posts/search": {
+            "get": {
+                "description": "get posts containing title",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Search Posts by title",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Post title",
+                        "name": "title",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Posts Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Posts page",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/data.Post"
+                        }
+                    }
+                }
+            }
+        },
         "/youtube/videos": {
             "get": {
                 "description": "Fetches a list of YouTube videos from a specific channel.",

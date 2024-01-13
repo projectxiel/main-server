@@ -98,6 +98,49 @@ func GetSinglePost(slug string) *Post {
 	return post
 }
 
+func wildcard(input string) string {
+	return "%" + input + "%"
+}
+
+func SearchPosts(title string, args ...string) ([]*Post, error) {
+	var posts []*Post
+	//Checks length of args to prevent panics
+	if len(args) > 0 {
+		//Checks if args[0] (limit) is an empty string, because if it is then we don't have a limit
+		if args[0] != "" {
+			limit, err := strconv.Atoi(args[0])
+			if err != nil {
+				return posts, err
+			}
+			var page int = 1
+			//Checks if args[1] (page) is an empty string, because if it is then we don't have a page
+			if args[1] != "" {
+				page, err = strconv.Atoi(args[1])
+				if err != nil {
+					return posts, err
+				}
+			}
+			page-- //Decrement page to make sure the offset is 1 less than the page
+			err = QueryAndScan(ctx, "SELECT * FROM posts WHERE title ILIKE $1 ORDER BY id LIMIT $2 OFFSET $3 ", &posts, wildcard(title), limit, page*limit)
+			if err != nil {
+				return posts, err
+			}
+		} else {
+			err := QueryAndScan(ctx, "SELECT * FROM posts WHERE title ILIKE $1 ORDER BY id", &posts, wildcard(title))
+			if err != nil {
+				return posts, err
+			}
+		}
+	} else {
+		err := QueryAndScan(ctx, "SELECT * FROM posts WHERE title ILIKE $1 ORDER BY id", &posts, wildcard(title))
+		if err != nil {
+			return posts, err
+		}
+	}
+
+	return posts, nil
+}
+
 func GetAllPosts(args ...string) ([]*Post, error) {
 	var posts []*Post
 	//Checks length of args to prevent panics
@@ -117,12 +160,12 @@ func GetAllPosts(args ...string) ([]*Post, error) {
 				}
 			}
 			page-- //Decrement page to make sure the offset is 1 less than the page
-			err = QueryAndScan(ctx, "SELECT * FROM posts LIMIT $1 OFFSET $2 ORDER BY id", &posts, limit, page*limit)
+			err = QueryAndScan(ctx, "SELECT * FROM posts ORDER BY id LIMIT $1 OFFSET $2 ", &posts, limit, page*limit)
 			if err != nil {
 				return posts, err
 			}
 		} else {
-			err := QueryAndScan(ctx, "SELECT * FROM posts ORDER BY id", &posts)
+			err := QueryAndScan(ctx, "SELECT * FROM posts ORDER BY id  ", &posts)
 			if err != nil {
 				return posts, err
 			}
@@ -135,8 +178,4 @@ func GetAllPosts(args ...string) ([]*Post, error) {
 	}
 
 	return posts, nil
-}
-
-func Query(input string, args ...interface{}) {
-	db.Query(ctx, input, args...)
 }

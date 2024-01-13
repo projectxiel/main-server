@@ -155,6 +155,35 @@ paths:
       summary: Get all posts
       tags:
       - Post
+  /posts/search:
+    get:
+      consumes:
+      - application/json
+      description: get posts containing title
+      parameters:
+      - description: Post title
+        in: query
+        name: title
+        required: true
+        type: string
+      - description: Posts Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Posts page
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.Post'
+      summary: Search Posts by title
+      tags:
+      - Post
   /youtube/videos:
     get:
       consumes:
