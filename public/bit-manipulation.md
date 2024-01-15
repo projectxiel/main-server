@@ -1,14 +1,35 @@
+- [Bits in the hardware](#bits-in-the-hardware)
+- [Arithmetic Overflows and Underflows](#arithmetic-overflows-and-underflows)
+- [Bitwise Operations](#bitwise-operations)
+- [Bitwise Operators](#bitwise-operators)
+- [Techniques](#techniques)
+  * [Zeroing Registers](#zeroing-registers)
+  * [Bit Masking](#bit-masking)
+  * [Reading Bits](#reading-bits)
+  * [Clearing Bits](#clearing-bits)
+  * [Clearing a Range of Bits](#clearing-a-range-of-bits)
+  * [Replacing Bits](#replacing-bits)
+  * [Setting Bits](#setting-bits)
+  * [Toggling bits](#toggling-bits)
+  * [Counting Bits](#counting-bits)
+  * [Converting from Decimal to Binary](#converting-from-decimal-to-binary)
 ## Bits in the hardware
 
 At the lowest level computers have circuits, and through these circuits flows electricity. A bit in the context of digital computing can be thought of as representing either the absence or presence of an electrical current through a circuit.
 
-Transistors act as switches, allowing or blocking the flow of an electrical current based on the presence or absence of an electrical signal. They are the basis behind logic gates, and really the entirety of all modern day computation. The state of a transistor (on or off) can represent a bit (0 or 1).
+The presence of an electrical current can be determined based on the voltage. For example 0 volts could indicate ("off") or a 0 bit, and 5 volts could indicate ("on") or a 1 bit. The actual voltage used in real circuits varies depending on the tech, these values were used for the purpose of explanation.
+
+Transistors are the main component behind bits, acting as switches, allowing or blocking the flow of an electrical current, by amplifying, or cutting of voltage, based on wether the presence or absence of an electrical signal should exist. 
+
+They are the basis behind logic gates, and really the entirety of all modern day computation. The state of a transistor (on or off) can represent a bit (0 or 1).
 
 Transistors can be arranged in very complex ways within integrated circuits to form not only the basis for computer processors, but also memory chips, enabling the manipulation and storage of digital information in the form of bits.
 
-CPU's have billions of transistors. A modern day i7 processor can have upward of 3 billion transistors.
+There are other components aswell, such as capacitors, and inductors that fine-tune the electrical signals, but they're not as pertinent to the topic of bits.
 
-Bits are of course the smallest unit of information possible on a computer. A single byte is equivalent to 8 bits.  But bits also represent digits in binary, the base 2 number system. Binary is different then the decimal base 10 number system that we're used to. All machine instructions are comprised of binary when executed. 
+CPU's happen to have billions of transistors. Modern day processors, like the i7 can have upward of 3 billion transistors.
+
+Bits, are of course the smallest unit of information possible on a computer. A single byte is equivalent to 8 bits.  But bits also represent digits in binary, the base 2 number system. Binary is different then the decimal base 10 number system that we're used to. All machine instructions are comprised of binary when executed. 
 
 Another numerical system often used in computer science is hexadecimal, a base 16 number system, which is actually a more concise way of expressing binary numbers, due to the fact that 16 is a power of 2.
 
@@ -88,11 +109,21 @@ The use of bit manipulation can also be found in graphics, encryption algorithms
 
 1. **Binary AND (&)**: This operation compares two bits and returns 1 only if both bits are 1. Otherwise, it returns 0. For example, `1 & 1` results in `1`, but `1 & 0` or `0 & 1` results in `0`.
 
+Another way to think about AND is how its used in boolean algebra. Boolean algebra, created by a George Boole, uses binary values, often represented as on/off, or true/false, to conduct logical operations, and really is the foundation behind logic gates, and digital logic in general.
+
+If you've ever written a boolean expression you know that the AND operator returns true only if both operands are true, and this is exactly how the AND operation works in the context of Bit Manipulation.
+
 2. **Binary OR (|)**: This operation compares two bits and returns 1 if either of the bits is 1. It only returns 0 when both bits are 0. For instance, `1 | 0` or `0 | 1` results in `1`, and `0 | 0` results in `0`.
+
+Once again we can think about OR in the way its used within boolean alegbra.
+
+If we write a boolean expression with an OR operator, it returns false only if both operands are false, otherwise if either operand is true, it returns true, same is true in the context of Bit Manipulation.
 
 3. **Binary XOR (^)**: This operation compares two bits and returns 1 if the bits are different, and 0 if they are the same. For example, `1 ^ 0` or `0 ^ 1` results in `1`, but `0 ^ 0` or `1 ^ 1` results in `0`.
 
-4. **Binary NOT (~)**: This operation inverts all the bits of its operand. If the bit is 1, it becomes 0, and if it's 0, it becomes 1. For example, `~1` results in all bits of 1 being inverted.
+4. **Binary NOT (~)**: This operation inverts all the bits of its operand. If the bit is 1, it becomes 0, and if it's 0, it becomes 1. For example, `~1` results in all bits of `1` being inverted, becoming either `-2`, or `254` depending on if its signed.
+
+In boolean algebra, the NOT operator works identically, it produces the opposite logical value of the expression, and we can think of NOT in the same way within the context of Bit Manipulation.
 
 5. **Binary Left Shift (<<)**: This operation shifts the bits of the first operand to the left by the number of positions specified by the second operand. It is equivalent to multiplying the first operand by 2 raised to the power of the second operand. For example, `1 << 2` results in `4`.
 
@@ -104,16 +135,16 @@ Just like in binary arithemtic, these operations are done from the LSB (Least Si
 
 ### Zeroing Registers
 
-In assembly the **XOR** mnemonic is used for zeroing registers since any two bits that are the same will result in a `0`, this means any number that is XORed by itself becomes `0`, making it possible to zero out a value or register if the first and second operands are the same.
+In assembly the **XOR** mnemonic is used for zeroing registers since any two bits that are the same in each of the operands will result in a `0`, this means any number that is XORed by itself becomes `0`, making it possible to zero out a value or register if the first and second operands are the same.
 
 `Linux 32-bit assembly (Intel)`
 ```x86asm
 global _start
 _start:
-    mov eax, 1 ; syscall number (sys_exit)
-    mov ebx, 69 ; loading 69 into ebx
+	mov eax, 1 ; syscall number (sys_exit)
+	mov ebx, 69 ; loading 69 into ebx
 	xor ebx, ebx ; zeroing out register
-    int 0x80 ; performs syscall to exit with 0
+	int 0x80 ; performs syscall to exit with 0
 ```
 Heres also a simpler example in C:
 ```c
@@ -135,7 +166,7 @@ Bit masks can be used to combine or isolate multiple bits from a number simultan
 0000
 ^
 ```
-You can create a mask in a lot of different ways, but the simplest wayy is simply to do 
+You can create a mask in a lot of different ways, but the simplest way is simply to do 
 ```go
 mask := (1<<n)
 ```
@@ -151,7 +182,7 @@ mask := (1<<1) | (1<<3)
 ```
 This Go code now targets the **2nd** and **4th** bit in the number. By using the **OR** operator on the values of `10` or `2^1` and `1000` or `2^3` you've effectively set two bits to `1`. The reason for this is quite simple, an **OR** operation will compare two bits and evaluate to `1` if any operand contains a `1`, which makes it especially useful for combining bits, and creating masks that target multiple bits in the way we've done above.
 
-You can always use the `0b` prefix to write explicit binary values directly, which you can use for creating a bit mask aswell.
+You can always use the `0b` prefix to write explicit binary values directly, which you can use for creating a bit masks aswell.
 
 ### Reading Bits
 
@@ -172,11 +203,11 @@ func main() {
 }
 
 ```
-To check the value of specific bits, you can use the bitwise AND operator with a mask where the targeted bits are 1. If x & (1 << n) is nonzero, then the nth bit of x is set. 
+To check the value of specific bits, you can use the bitwise AND operator with a mask where the targeted bits are `1`. If `x & (1 << n)` is nonzero, then the nth bit of `x` is set. 
 
-The reason is simple, if the targeted bit is 1 then the AND operation results in 1, and the number produced will be larger than 1, otherwise the AND operation will cause all bits to be 0 including the bit thats targeted since its already 0, this results in you zeroing out the number, and you'll find out that the targeted bit is a 0.
+The reason is simple, if the targeted bit is `1` then the AND operation results in `1`, and the number produced will be larger than `1`, otherwise the **AND** operation will cause all bits to be `0` including the bit thats targeted since its already `0`, this results in you zeroing out the number, and you'll find out that the targeted bit is a `1`.
 
-The above code illustrates this, its a simple program that takes in an argument from the commandline, and then creates a bit mask based on the value passed in as an argument, it then uses the AND operator on the mask and checks if the result is more than zero, because if it is, then that means that the bit set or equal to 1, therefore you should return 1, otherwise you can return 0 because the bit is a zero, this allows you to find the value of any bit in a number at any position.
+The above code illustrates this, its a simple program that takes in an argument from the commandline, and then creates a bit mask based on the value passed in as an argument, it then uses the **AND** operator on the mask and checks if the result is more than zero, because if it is, then that means that the bit set or equal to `1`, therefore you should return `1`, otherwise you can return `0` because the bit is a zero, this allows you to find the value of any bit in a number at any position.
 
 ### Clearing Bits
 
@@ -198,24 +229,110 @@ int main()
 }
 ```
 
-To clear specific bits (set them to 0), use the bitwise AND operator (&) with a mask where the bits to be cleared are 0. This will cause all other bits to be unaffected since if the bits were 0 they remain 0 and if they were 1 they remain 1, however the targeted bit will change to 0 since the result of the AND operation is 0 if any of the two operands is a 0.
+To clear specific bits (set them to `0`), use the bitwise **AND** operator `(&)` with a mask where the bits to be cleared are `0`. This will cause all other bits to be unaffected since if the bits were `0` they remain `0` and if they were `1` they remain `1`, however the targeted bit will change to `0` since the result of the **AND** operation is `0` if any of the two operands is a `0`.
 
-Creating a mask like this is easy, you just take a regular mask, that uses 1's to target bits, and you perform a NOT operation on it, flipping all of the bits, and now 0 will target bits for clearing.
+Creating a mask like this is easy, you just take a regular mask, that uses `1`'s to target bits, and you perform a **NOT** operation on it, flipping all of the bits, and now `0` will target bits for clearing.
 
 The above code illustrates this once again. I used C++ because passing by reference makes things easier, allowing us to mutate `n` because we are passing in a reference to it, and the nagation operator in Go is kind of weird and confusing so I just wanted to keep things simpler.
 
 ### Clearing a Range of Bits
-*TODO*
-### Setting Bits
+```cpp
+#include <iostream>
+using namespace std;
 
-To set specific bits to 1, use the bitwise OR operator (|) with a mask where the bits to be set are 1.
+void clearBitsInRange(int &n, int i, int j)
+{
+    int x = (~0) << (j + 1);
+    int y = (1 << i) - 1;
 
-### Toggling bits
+    int mask = x | y;
+    n = n & mask;
+}
 
-To toggle specific bits, use the bitwise XOR operator (^) with a mask where the bits to be toggled are 1.
+int main()
+{
+    int n = 31; // 11111
+    clearBitsInRange(n, 1, 3); //clearing bits 1 to 3 (zero indexed)
+    cout << n << endl; // 17 printed (10001)
+    return 0;
+}
+```
+To clear a range of bits and set them to `0`, we use the bitwise **AND** operator `(&)` with a mask where the bits to be cleared are `0`.
+
+The only difference between clearing a single bit and a range of bits, is the bit mask. If more than one bit in the mask is a `0`, then every bit with a `0` value will be cleared after doing an **AND** operation, while all bits in the mask that are `1`, will be unaffected.
 
 ### Replacing Bits
-*TODO*
+```cpp
+#include <iostream>
+using namespace std;
+
+void clearBitsInRange(int &n, int i, int j)
+{
+    int x = (~0) << (j + 1);
+    int y = (1 << i) - 1;
+
+    int mask = x | y;
+    n = n & mask;
+}
+void replaceBits(int &n, int i, int j, int m)
+{
+    clearBitsInRange(n, i, j);
+    int mask = (m << i);
+    n = n | mask;
+}
+int main()
+{
+    int n = 0b1001001; // 73
+    int i = 2;
+    int j = 4;
+    int m = 5;
+    replaceBits(n, i, j, m);
+    cout << n << endl; // 85
+    return 0;
+}
+```
+To replace a segment of bits in a number, you can first clear the segment of bits, then perform a bitwise **OR** operation with the bits you want replaced.  This is pretty easy to understand because when all bits are `0`, performing an **OR** operation with any bit will fill in the bits exactly, since the **OR** operation results in `1` if either operand is a `1`.
+
+The code first clears a range of bits, then  left shifts by the amount of the starting index for the bits its going to replace, so that it can replace the correct bits, then using OR to combne its bits with the zeroed bits, which replaces them exactly because the OR operation will not affect an operand if the other operand is all zeros.
+
+### Setting Bits
+```cpp
+#include <iostream>
+using namespace std;
+void SetBit(int &n, int i)
+{
+    int mask = (1 << i);
+    n = (n | mask);
+}
+int main()
+{
+    int n = 0b100111;
+    SetBit(n, 4);
+    cout << n << endl;
+    return 0;
+}
+```
+To set specific bits to `1`, use the bitwise **OR** operator `(|)` with a mask where the bits to be set are `1`. This makes sense because regardless of wether or not the bit is set, the result is always `1`, which means using the **OR** operation will ensure a bit is set to `1`.
+
+### Toggling bits
+```cpp
+#include <iostream>
+using namespace std;
+void toggleBit(int &n, int i)
+{
+    int mask = (1 << i);
+    n = (n ^ mask);
+}
+int main()
+{
+    int n = 0b110111;
+    toggleBit(n, 4);
+    cout << n << endl;
+    return 0;
+}
+```
+To toggle specific bits, use the bitwise **XOR** operator `(^)` with a mask where the bits to be toggled are `1`. Using an **XOR** works because **XOR** always produces `0` if both bits are the same, this means that when the mask is all `1`'s any `0` bit in the original number will be converted to `1`, and if its a `1`, it'll be converted to a `0`.
+
 ### Counting Bits
 ```go
 func countBits(n int) int {
@@ -248,3 +365,35 @@ func main() {
 	go fmt.Println(countBitsTwo(n)) // should print 5
 }
 ```
+You can count the number of bits in a number by iterating through each bit and adding them all together, if the bit is a 0, it won't increase the value of count, and if its a 1, it will increment the count, you iterate for aslong as the number is more than 0, because that means that there are more bits in the number to be iterated over. This is what is done in the first block of code. `n & 1` will return the last bit in a number, so once you have the last bit you can add it to a `count` to keep track of the amount, then do right shift to drop off the last bit, so that you can continue on with the next bit until you've iterated over every bit and right shifted to the number 0.
+
+That is the naive approach, but there is a much faster and more optimal solution.
+
+The second implementation `countBitsTwo` works slightly dfferently.Its known as Brian Kernighan's algorithm. It keeps track of a count the same way, but performs a bitwise operation that removes the last set bit from the number `n = n & (n -1)` then increments the count each time this is done. This means for every bit that exists the count is incremented, and this will only iterate for as many set bits that exist, making it faster than the first solution.
+
+### Converting from Decimal to Binary
+```go
+func convertToBinary(n int) int {
+	bin := 0
+	p := 1
+	for n > 0 {
+		last_bit := n & 1
+		bin += (p * last_bit)
+		p = p * 10
+		n = n >> 1
+	}
+	return bin
+}
+
+func main() {
+	n := 11 // 1011
+	fmt.Println(convertBinary(n))
+}
+```
+The last thing I want to go over in this article is how to convert a decimal number to its binary representation but in decimal format. The way we'll do this, will take us right back to the beggining of this article. Remember how I said that every digit is just an exponent of its base, and the further left you go the higher the expoential value? Well this is true, but we can also use this information to represent binary numbers in decimal format, by essentially just multiplying by our base.
+
+That is what the convertToBinary function does. The function starts by initializing a value of 0 in a variable `bin`, and it will add to this variable for the duration of its implementation. First it loops for aslong as n is more than 0, which means that there are still bits left in the number. Just like in the counting bits function, the first implementation, we will get the last bit in the number by using `n & 1`. At the end of each iteration we will right shift n to drop off the last bit. This is actually very similar to the count bits function but with some differences. The p variable of 1 is used to keep track of the placement of the digit, where its multiplied by 10 each iteration to move left once. Each iteration the value of the last bit is multiplied by the current exponential value of 10 (p) for its placement, then gets added to the value of bin, and when we have iterated through the bits, we get a number that looks like the binary representation, but in decimal format, by multiplying by the base, more specifically base 10.
+
+
+That about covers the basics of bit manipulation, and binary too for the most part, hopefully you learned something. Once you understand how these operations work, you can get pretty creative and of and do some pretty interesting things, anyways thanks for reading.
+
