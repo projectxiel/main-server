@@ -78,24 +78,26 @@ func QueryAndScan(ctx context.Context, query string, dest interface{}, args ...i
 }
 
 type Post struct {
-	ID          int32     `json:"id"`
-	Title       string    `json:"title"`
-	Content     string    `json:"content"`
-	Type        string    `json:"type"`
-	Description string    `json:"description"`
-	ImageUrl    string    `json:"image_url"`
-	Slug        string    `json:"slug"`
-	DateCreated time.Time `json:"date_created"`
+	ID              int32     `json:"id"`
+	Title           string    `json:"title"`
+	Content         string    `json:"content"`
+	Type            string    `json:"type"`
+	Description     string    `json:"description"`
+	ImageUrl        string    `json:"image_url"`
+	Slug            string    `json:"slug"`
+	DateCreated     time.Time `json:"date_created"`
+	TableOfContents bool      `json:"table_of_contents"`
 }
 type Task struct {
-	Task     string
-	Complete bool
+	Task     string `json:"task"`
+	Complete bool   `json:"complete"`
 }
 type CurrentProject struct {
-	ID       int32
-	Name     string
-	Progress int32
-	Tasks    []Task
+	ID       int32  `json:"id"`
+	Name     string `json:"name"`
+	Progress int32  `json:"progress"`
+	Tasks    []Task `json:"tasks"`
+	ImageUrl string `json:"image_url"`
 }
 
 func GetSinglePost(slug string) *Post {

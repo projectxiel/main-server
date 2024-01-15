@@ -57,7 +57,7 @@ func GetAllPosts(c *fiber.Ctx) error {
 // @Param        limit query      int false "Projects Limit"
 // @Param 		 page query 		int false "Projects page"
 // @Success      200  {object}  data.CurrentProject
-// @Router       /posts [get]
+// @Router       /current-projects [get]
 func GetCurrentProjects(c *fiber.Ctx) error {
 	m := c.Queries()
 	limit := m["limit"]

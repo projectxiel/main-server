@@ -123,7 +123,7 @@ The use of bit manipulation can also be found in graphics, encryption algorithms
 
 4. **Binary NOT (~)**: This operation inverts all the bits of its operand. If the bit is 1, it becomes 0, and if it's 0, it becomes 1. For example, `~1` results in all bits of `1` being inverted, becoming either `-2`, or `254` depending on if its signed.
 
-In boolean algebra, the NOT operator works identically, it produces the opposite logical value of the expression, and we can think of NOT in the same way within the context of Bit Manipulation.
+    In boolean algebra, the NOT operator works identically, it produces the opposite logical value of the expression, and we can think of NOT in the same way within the context of Bit Manipulation.
 
 5. **Binary Left Shift (<<)**: This operation shifts the bits of the first operand to the left by the number of positions specified by the second operand. It is equivalent to multiplying the first operand by 2 raised to the power of the second operand. For example, `1 << 2` results in `4`.
 

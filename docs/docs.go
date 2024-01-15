@@ -23,6 +23,43 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/current-projects": {
+            "get": {
+                "description": "get current projects",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Current Project"
+                ],
+                "summary": "Get all current projects",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Projects Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Projects page",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/data.CurrentProject"
+                        }
+                    }
+                }
+            }
+        },
         "/post/{slug}": {
             "get": {
                 "description": "get post by slug",
@@ -57,7 +94,7 @@ const docTemplate = `{
         },
         "/posts": {
             "get": {
-                "description": "get current projects",
+                "description": "get posts",
                 "consumes": [
                     "application/json"
                 ],
@@ -65,19 +102,19 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Current Project"
+                    "Post"
                 ],
-                "summary": "Get all current projects",
+                "summary": "Get all posts",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Projects Limit",
+                        "description": "Posts Limit",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "Projects page",
+                        "description": "Posts page",
                         "name": "page",
                         "in": "query"
                     }
@@ -86,7 +123,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.CurrentProject"
+                            "$ref": "#/definitions/data.Post"
                         }
                     }
                 }
@@ -167,6 +204,9 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "image_url": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -212,6 +252,9 @@ const docTemplate = `{
                 },
                 "slug": {
                     "type": "string"
+                },
+                "table_of_contents": {
+                    "type": "boolean"
                 },
                 "title": {
                     "type": "string"
