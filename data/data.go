@@ -87,6 +87,16 @@ type Post struct {
 	Slug        string    `json:"slug"`
 	DateCreated time.Time `json:"date_created"`
 }
+type Task struct {
+	Task     string
+	Complete bool
+}
+type CurrentProject struct {
+	ID       int32
+	Name     string
+	Progress int32
+	Tasks    []Task
+}
 
 func GetSinglePost(slug string) *Post {
 	var posts []*Post
@@ -178,4 +188,43 @@ func GetAllPosts(args ...string) ([]*Post, error) {
 	}
 
 	return posts, nil
+}
+
+func GetCurrentProjects(args ...string) ([]*CurrentProject, error) {
+	var current_projects []*CurrentProject
+	//Checks length of args to prevent panics
+	if len(args) > 0 {
+		//Checks if args[0] (limit) is an empty string, because if it is then we don't have a limit
+		if args[0] != "" {
+			limit, err := strconv.Atoi(args[0])
+			if err != nil {
+				return current_projects, err
+			}
+			var page int = 1
+			//Checks if args[1] (page) is an empty string, because if it is then we don't have a page
+			if args[1] != "" {
+				page, err = strconv.Atoi(args[1])
+				if err != nil {
+					return current_projects, err
+				}
+			}
+			page-- //Decrement page to make sure the offset is 1 less than the page
+			err = QueryAndScan(ctx, "SELECT * FROM current_projects ORDER BY id LIMIT $1 OFFSET $2 ", &current_projects, limit, page*limit)
+			if err != nil {
+				return current_projects, err
+			}
+		} else {
+			err := QueryAndScan(ctx, "SELECT * FROM current_projects ORDER BY id  ", &current_projects)
+			if err != nil {
+				return current_projects, err
+			}
+		}
+	} else {
+		err := QueryAndScan(ctx, "SELECT * FROM current_projects ORDER BY id", &current_projects)
+		if err != nil {
+			return current_projects, err
+		}
+	}
+
+	return current_projects, nil
 }

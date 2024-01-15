@@ -57,7 +57,7 @@ const docTemplate = `{
         },
         "/posts": {
             "get": {
-                "description": "get posts",
+                "description": "get current projects",
                 "consumes": [
                     "application/json"
                 ],
@@ -65,19 +65,19 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Post"
+                    "Current Project"
                 ],
-                "summary": "Get all posts",
+                "summary": "Get all current projects",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Posts Limit",
+                        "description": "Projects Limit",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "Posts page",
+                        "description": "Projects page",
                         "name": "page",
                         "in": "query"
                     }
@@ -86,7 +86,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.Post"
+                            "$ref": "#/definitions/data.CurrentProject"
                         }
                     }
                 }
@@ -161,6 +161,26 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "data.CurrentProject": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "progress": {
+                    "type": "integer"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/data.Task"
+                    }
+                }
+            }
+        },
         "data.PageInfo": {
             "type": "object",
             "properties": {
@@ -197,6 +217,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.Task": {
+            "type": "object",
+            "properties": {
+                "complete": {
+                    "type": "boolean"
+                },
+                "task": {
                     "type": "string"
                 }
             }

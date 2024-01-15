@@ -15,5 +15,6 @@ func Routes(app *fiber.App) {
 	app.Get("/post/:slug", handlers.GetSinglePost)
 	app.Get("/posts", handlers.GetAllPosts)
 	app.Get("/posts/search", handlers.SearchPosts)
+	app.Get("/current-projects", handlers.GetCurrentProjects)
 
 }

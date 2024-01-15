@@ -47,7 +47,7 @@ Now before 2s compliment, there was 1's compliment, which can found by inverting
 
 Point is, no one uses that crap, we use 2s compliment, which as stated before allows you to find the negative or positive representation of any number, by flipping the bits and adding 1. Take a 4 bit number 0100, which is 4, if you want -4, its simply 1100, invert and add 1, and if you want the positive representation, you can repeat the process to return to the positive value. Twos compliment is actually that simple. The most significant bit is the signed bit, which will let you know if a number is negative or positive. 1 indicates that a number is negative, and 0 indicates that the number is positive.
 
-The only thing to keep in mind is that because you have negative numbers, you can only represent half the number of positive values as opposed to unsigned numbers. In an unsigned 8 bit integer the highest number you can express is 255, but a signed 8 bit number can only express -128 to 127, this is still 256 values, but half of the values are negative.
+The only thing to keep in mind is that because you have negative numbers, you can only represent half the number of positive values as opposed to unsigned numbers. In an unsigned 8 bit integer the highest number you can express is `255`, but a signed 8 bit number can only express `-128` to `127`, this is still `256` values, but half of the values are negative.
 
 Now lets talk a little about binary addition and subtraction.
 
@@ -109,15 +109,15 @@ The use of bit manipulation can also be found in graphics, encryption algorithms
 
 1. **Binary AND (&)**: This operation compares two bits and returns 1 only if both bits are 1. Otherwise, it returns 0. For example, `1 & 1` results in `1`, but `1 & 0` or `0 & 1` results in `0`.
 
-Another way to think about AND is how its used in boolean algebra. Boolean algebra, created by a George Boole, uses binary values, often represented as on/off, or true/false, to conduct logical operations, and really is the foundation behind logic gates, and digital logic in general.
+    Another way to think about AND is how its used in boolean algebra. Boolean algebra, created by a George Boole, uses binary values, often represented as on/off, or true/false, to conduct logical operations, and really is the foundation behind logic gates, and digital logic in general.
 
-If you've ever written a boolean expression you know that the AND operator returns true only if both operands are true, and this is exactly how the AND operation works in the context of Bit Manipulation.
+    If you've ever written a boolean expression you know that the AND operator returns true only if both operands are true, and this is exactly how the AND operation works in the context of Bit Manipulation.
 
 2. **Binary OR (|)**: This operation compares two bits and returns 1 if either of the bits is 1. It only returns 0 when both bits are 0. For instance, `1 | 0` or `0 | 1` results in `1`, and `0 | 0` results in `0`.
 
-Once again we can think about OR in the way its used within boolean alegbra.
+    Once again we can think about OR in the way its used within boolean alegbra.
 
-If we write a boolean expression with an OR operator, it returns false only if both operands are false, otherwise if either operand is true, it returns true, same is true in the context of Bit Manipulation.
+    If we write a boolean expression with an OR operator, it returns false only if both operands are false, otherwise if either operand is true, it returns true, same is true in the context of Bit Manipulation.
 
 3. **Binary XOR (^)**: This operation compares two bits and returns 1 if the bits are different, and 0 if they are the same. For example, `1 ^ 0` or `0 ^ 1` results in `1`, but `0 ^ 0` or `1 ^ 1` results in `0`.
 
@@ -141,17 +141,17 @@ In assembly the **XOR** mnemonic is used for zeroing registers since any two bit
 ```x86asm
 global _start
 _start:
-	mov eax, 1 ; syscall number (sys_exit)
-	mov ebx, 69 ; loading 69 into ebx
-	xor ebx, ebx ; zeroing out register
-	int 0x80 ; performs syscall to exit with 0
+    mov eax, 1 ; syscall number (sys_exit)
+    mov ebx, 69 ; loading 69 into ebx
+    xor ebx, ebx ; zeroing out register
+    int 0x80 ; performs syscall to exit with 0
 ```
 Heres also a simpler example in C:
 ```c
 int main() {
-	int n = 69;
-	n = n^n; //zeroes out n
-	return n; //exits with 0
+    int n = 69;
+    n = n^n; //zeroes out n
+    return n; //exits with 0
 }
 ```
 ### Bit Masking
@@ -188,18 +188,18 @@ You can always use the `0b` prefix to write explicit binary values directly, whi
 
 ```go
 func getBit(n, i int) int {
-	mask := (1 << i) //creates bit mask with value: 100 aka 1<<2 (2^2)
+    mask := (1 << i) //creates bit mask with value: 100 aka 1<<2 (2^2)
 
-	if (n & mask) > 0 { //101 & 100 results in 100 or 4 in decimal which is larger than 0
-		return 1
-	}
-	return 0
+    if (n & mask) > 0 { //101 & 100 results in 100 or 4 in decimal which is larger than 0
+        return 1
+    }
+    return 0
 }
 
 func main() {
-	n := 5 // the number: 101 (binary)
-	i := 2 // create index of 2
-	fmt.Println(getBit(n, i)) // prints the value 1, because the 3rd bit in 5 is 1
+    n := 5 // the number: 101 (binary)
+    i := 2 // create index of 2
+    fmt.Println(getBit(n, i)) // prints the value 1, because the 3rd bit in 5 is 1
 }
 
 ```
@@ -336,33 +336,33 @@ To toggle specific bits, use the bitwise **XOR** operator `(^)` with a mask wher
 ### Counting Bits
 ```go
 func countBits(n int) int {
-	count := 0
-	for n > 0 {
-		last_bit := n & 1
-		count += last_bit
-		n = n >> 1
-	}
-	return count
+    count := 0
+    for n > 0 {
+        last_bit := n & 1
+        count += last_bit
+        n = n >> 1
+    }
+    return count
 }
 
 func main() {
-	n := 31                   // 11111
-	fmt.Println(countBits(n)) // should print 5
+    n := 31                   // 11111
+    fmt.Println(countBits(n)) // should print 5
 }
 ```
 ```go
 func countBitsTwo(n int) int {
-	count := 0
-	for n > 0 {
-		n = n & (n - 1)
-		count++
-	}
-	return count
+    count := 0
+    for n > 0 {
+        n = n & (n - 1)
+        count++
+    }
+    return count
 }
 
 func main() {
-	n := 31 // 11111
-	go fmt.Println(countBitsTwo(n)) // should print 5
+    n := 31 // 11111
+    go fmt.Println(countBitsTwo(n)) // should print 5
 }
 ```
 You can count the number of bits in a number by iterating through each bit and adding them all together, if the bit is a 0, it won't increase the value of count, and if its a 1, it will increment the count, you iterate for aslong as the number is more than 0, because that means that there are more bits in the number to be iterated over. This is what is done in the first block of code. `n & 1` will return the last bit in a number, so once you have the last bit you can add it to a `count` to keep track of the amount, then do right shift to drop off the last bit, so that you can continue on with the next bit until you've iterated over every bit and right shifted to the number 0.
@@ -374,20 +374,20 @@ The second implementation `countBitsTwo` works slightly dfferently.Its known as 
 ### Converting from Decimal to Binary
 ```go
 func convertToBinary(n int) int {
-	bin := 0
-	p := 1
-	for n > 0 {
-		last_bit := n & 1
-		bin += (p * last_bit)
-		p = p * 10
-		n = n >> 1
-	}
-	return bin
+    bin := 0
+    p := 1
+    for n > 0 {
+        last_bit := n & 1
+        bin += (p * last_bit)
+        p = p * 10
+        n = n >> 1
+    }
+    return bin
 }
 
 func main() {
-	n := 11 // 1011
-	fmt.Println(convertBinary(n))
+    n := 11 // 1011
+    fmt.Println(convertBinary(n))
 }
 ```
 The last thing I want to go over in this article is how to convert a decimal number to its binary representation but in decimal format. The way we'll do this, will take us right back to the beggining of this article. Remember how I said that every digit is just an exponent of its base, and the further left you go the higher the expoential value? Well this is true, but we can also use this information to represent binary numbers in decimal format, by essentially just multiplying by our base.

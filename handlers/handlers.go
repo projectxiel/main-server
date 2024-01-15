@@ -48,6 +48,27 @@ func GetAllPosts(c *fiber.Ctx) error {
 	return c.JSON(d)
 }
 
+// GetCurrentProjects godoc
+// @Summary      Get all current projects
+// @Description  get current projects
+// @Tags         Current Project
+// @Accept       json
+// @Produce      json
+// @Param        limit query      int false "Projects Limit"
+// @Param 		 page query 		int false "Projects page"
+// @Success      200  {object}  data.CurrentProject
+// @Router       /posts [get]
+func GetCurrentProjects(c *fiber.Ctx) error {
+	m := c.Queries()
+	limit := m["limit"]
+	page := m["page"]
+	d, err := data.GetCurrentProjects(limit, page)
+	if err != nil {
+		return c.JSON(err)
+	}
+	return c.JSON(d)
+}
+
 // SearchPosts godoc
 // @Summary      Search Posts by title
 // @Description  get posts containing title

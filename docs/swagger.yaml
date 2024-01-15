@@ -1,5 +1,18 @@
 basePath: /
 definitions:
+  data.CurrentProject:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      progress:
+        type: integer
+      tasks:
+        items:
+          $ref: '#/definitions/data.Task'
+        type: array
+    type: object
   data.PageInfo:
     properties:
       resultsPerPage:
@@ -24,6 +37,13 @@ definitions:
       title:
         type: string
       type:
+        type: string
+    type: object
+  data.Task:
+    properties:
+      complete:
+        type: boolean
+      task:
         type: string
     type: object
   data.Thumbnail:
@@ -135,13 +155,13 @@ paths:
     get:
       consumes:
       - application/json
-      description: get posts
+      description: get current projects
       parameters:
-      - description: Posts Limit
+      - description: Projects Limit
         in: query
         name: limit
         type: integer
-      - description: Posts page
+      - description: Projects page
         in: query
         name: page
         type: integer
@@ -151,10 +171,10 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/data.Post'
-      summary: Get all posts
+            $ref: '#/definitions/data.CurrentProject'
+      summary: Get all current projects
       tags:
-      - Post
+      - Current Project
   /posts/search:
     get:
       consumes:
