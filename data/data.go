@@ -93,11 +93,12 @@ type Task struct {
 	Complete bool   `json:"complete"`
 }
 type CurrentProject struct {
-	ID       int32  `json:"id"`
-	Name     string `json:"name"`
-	Progress int32  `json:"progress"`
-	Tasks    []Task `json:"tasks"`
-	ImageUrl string `json:"image_url"`
+	ID              int32     `json:"id"`
+	Name            string    `json:"name"`
+	Progress        int32     `json:"progress"`
+	Tasks           []Task    `json:"tasks"`
+	ImageUrl        string    `json:"image_url"`
+	ExpectedRelease time.Time `json:"expected_release"`
 }
 
 func GetSinglePost(slug string) *Post {
