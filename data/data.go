@@ -23,7 +23,7 @@ type HTTPError struct {
 	Message string
 }
 
-func QueryAndScan(ctx context.Context, query string, dest interface{}, args ...interface{}) error {
+func QueryAndScan(ctx context.Context, query string, dest any, args ...any) error {
 	rows, err := db.Query(ctx, query, args...)
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func QueryAndScan(ctx context.Context, query string, dest interface{}, args ...i
 			elem = reflect.New(sliceElemType).Elem()
 		}
 
-		fields := make([]interface{}, elem.Elem().NumField())
+		fields := make([]any, elem.Elem().NumField())
 		for i := range fields {
 			fields[i] = elem.Elem().Field(i).Addr().Interface()
 		}
