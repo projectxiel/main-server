@@ -1,6 +1,7 @@
 package data
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"log"
@@ -9,6 +10,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -230,4 +233,58 @@ func GetCurrentProjects(args ...string) ([]*CurrentProject, error) {
 	}
 
 	return current_projects, nil
+}
+
+func GetBlobData(blobname string) error {
+	url := os.Getenv("CONTAINER_URL")
+	tenantID := os.Getenv("TENANT_ID")
+	clientID := os.Getenv("CLIENT_ID")
+	clientSecret := os.Getenv("CLIENT_SECRET")
+
+	credential, err := azidentity.NewClientSecretCredential(tenantID, clientID, clientSecret, nil)
+	if err != nil {
+		return err
+	}
+
+	client, err := azblob.NewClient(url, credential, nil)
+	if err != nil {
+		return err
+	}
+
+	containerName := "projectxiel"
+
+	// Download the blob
+	get, err := client.DownloadStream(ctx, containerName, blobname, nil)
+
+	if err != nil {
+		return err
+	}
+	downloadedData := bytes.Buffer{}
+	retryReader := get.NewRetryReader(ctx, &azblob.RetryReaderOptions{})
+
+	_, err = downloadedData.ReadFrom(retryReader)
+
+	if err != nil {
+		return err
+	}
+
+	err = retryReader.Close()
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile("cache/"+blobname, downloadedData.Bytes(), 0644)
+
+	return err
+}
+
+type Filename struct {
+	Id   int32
+	Name string
+}
+
+func GetFileNames() ([]*Filename, error) {
+	var files []*Filename
+	err := QueryAndScan(ctx, "SELECT * FROM filenames ORDER BY id", &files)
+	return files, err
 }

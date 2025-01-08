@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"projectxiel/data"
@@ -108,7 +109,7 @@ func FetchYouTubeVideos(c *fiber.Ctx) error {
 	if fileInfo, err := os.Stat(cacheFile); err == nil {
 		if time.Since(fileInfo.ModTime()) < time.Hour*24 {
 			// Redirect to static route
-			return c.Redirect(cacheURL)
+			return c.Status(200).Redirect(cacheURL)
 		}
 	}
 	var ChannelID = os.Getenv("CHANNEL_ID")
@@ -149,4 +150,67 @@ func FetchYouTubeVideos(c *fiber.Ctx) error {
 	os.WriteFile(cacheFile, body, 0644)
 	// Forward the parsed JSON response
 	return c.JSON(data)
+}
+
+func init() {
+	data, err := data.GetFileNames()
+	if err != nil {
+		log.Fatal(err)
+	}
+	filenameCache = sliceToKeyMap(data)
+}
+
+var filenameCache map[string]struct{}
+
+func GetBlobData(c *fiber.Ctx) error {
+	blobname := c.Params("blobname")
+	cacheFile := "cache/" + blobname
+	cacheURL := "/static/" + blobname // URL path for the static filecacheUrl
+
+	// Check if cached file exists and is valid
+	if fileInfo, err := os.Stat(cacheFile); err == nil {
+		if time.Since(fileInfo.ModTime()) < time.Hour*24 {
+			// Redirect to static route
+			return c.Status(200).Redirect(cacheURL)
+		}
+	}
+	if _, exists := filenameCache[blobname]; !exists {
+		return c.Status(404).JSON(fiber.Map{
+			"error": "Blob doesn't exist ",
+		})
+	}
+	var err error
+	if err = data.GetBlobData(blobname); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to retrieve Blob: ",
+		})
+	}
+	return c.Status(200).Redirect(cacheURL)
+}
+
+func sliceToKeyMap(slice []*data.Filename) map[string]struct{} {
+	result := make(map[string]struct{})
+	for _, item := range slice {
+		if item != nil { // Ensure the pointer is not nil
+			result[item.Name] = struct{}{}
+		}
+	}
+	return result
+}
+
+func UpdateCache(c *fiber.Ctx) error {
+	token := c.Get("Authorization")
+	expected := "Bearer " + os.Getenv("CACHE_UPDATE_TOKEN")
+	if token != expected {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
+	}
+	data, err := data.GetFileNames()
+	if err != nil {
+		return err
+	}
+
+	filenameCache = sliceToKeyMap(data)
+
+	log.Println("Cache updated successfully")
+	return nil
 }
