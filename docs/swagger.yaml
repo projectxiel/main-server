@@ -2,6 +2,8 @@ basePath: /
 definitions:
   data.CurrentProject:
     properties:
+      expected_release:
+        type: string
       id:
         type: integer
       image_url:
@@ -134,6 +136,28 @@ info:
   title: ProjectXiel API
   version: "1.0"
 paths:
+  /{blobname}:
+    get:
+      consumes:
+      - '*/*'
+      description: Retrieves a static binary file from Blob Storage or cache, and
+        serves it
+      parameters:
+      - description: Filename
+        in: path
+        name: blobname
+        required: true
+        type: string
+      produces:
+      - '*/*'
+      responses:
+        "200":
+          description: Binary File Content
+          schema:
+            type: file
+      summary: Serves static files
+      tags:
+      - Static
   /current-projects:
     get:
       consumes:

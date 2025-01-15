@@ -9,7 +9,6 @@ import (
 )
 
 func Routes(app *fiber.App) {
-	app.Static("/static", "./cache")
 	app.Get("/swagger/*", fiberswagger.HandlerDefault)
 	app.Get("/youtube/videos", handlers.FetchYouTubeVideos)
 	app.Get("/post/:slug", handlers.GetSinglePost)

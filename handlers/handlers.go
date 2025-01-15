@@ -103,13 +103,12 @@ func SearchPosts(c *fiber.Ctx) error {
 // @Router       /youtube/videos [get]
 func FetchYouTubeVideos(c *fiber.Ctx) error {
 	cacheFile := "cache/youtube-videos.json"
-	cacheURL := "/static/youtube-videos.json" // URL path for the static file
 
 	// Check if cached file exists and is valid
 	if fileInfo, err := os.Stat(cacheFile); err == nil {
 		if time.Since(fileInfo.ModTime()) < time.Hour*24 {
 			// Redirect to static route
-			return c.Status(200).Redirect(cacheURL)
+			return c.SendFile(cacheFile)
 		}
 	}
 	var ChannelID = os.Getenv("CHANNEL_ID")
@@ -162,16 +161,24 @@ func init() {
 
 var filenameCache map[string]struct{}
 
+// GetBlobData godoc
+// @Summary      Serves static files
+// @Description  Retrieves a static binary file from Blob Storage or cache, and serves it
+// @Tags         Static
+// @Accept       */*
+// @Produce      */*
+// @Param        blobname   path      string  true  "Filename"
+// @Success      200  {file}  file "Binary File Content"
+// @Router       /{blobname} [get]
 func GetBlobData(c *fiber.Ctx) error {
 	blobname := c.Params("blobname")
 	cacheFile := "cache/" + blobname
-	cacheURL := "/static/" + blobname // URL path for the static filecacheUrl
 
 	// Check if cached file exists and is valid
 	if fileInfo, err := os.Stat(cacheFile); err == nil {
 		if time.Since(fileInfo.ModTime()) < time.Hour*24 {
 			// Redirect to static route
-			return c.Status(200).Redirect(cacheURL)
+			return c.SendFile(cacheFile)
 		}
 	}
 	if _, exists := filenameCache[blobname]; !exists {
@@ -185,7 +192,7 @@ func GetBlobData(c *fiber.Ctx) error {
 			"error": "Failed to retrieve Blob: ",
 		})
 	}
-	return c.Status(200).Redirect(cacheURL)
+	return c.SendFile(cacheFile)
 }
 
 func sliceToKeyMap(slice []*data.Filename) map[string]struct{} {

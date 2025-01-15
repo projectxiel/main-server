@@ -195,12 +195,47 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/{blobname}": {
+            "get": {
+                "description": "Retrieves a static binary file from Blob Storage or cache, and serves it",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "tags": [
+                    "Static"
+                ],
+                "summary": "Serves static files",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filename",
+                        "name": "blobname",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Binary File Content",
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "data.CurrentProject": {
             "type": "object",
             "properties": {
+                "expected_release": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
