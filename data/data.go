@@ -279,8 +279,9 @@ func GetBlobData(blobname string) error {
 }
 
 type Filename struct {
-	Id   int32
-	Name string
+	Id           int32
+	Name         string
+	LastModified time.Time
 }
 
 func GetFileNames() ([]*Filename, error) {

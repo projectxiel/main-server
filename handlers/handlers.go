@@ -189,7 +189,7 @@ func GetBlobData(c *fiber.Ctx) error {
 	var err error
 	if err = data.GetBlobData(blobname); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Failed to retrieve Blob: ",
+			"error": "Failed to retrieve Blob: " + blobname,
 		})
 	}
 	return c.SendFile(cacheFile)
@@ -205,19 +205,35 @@ func sliceToKeyMap(slice []*data.Filename) map[string]struct{} {
 	return result
 }
 
+var lastupdated time.Time
+
 func UpdateCache(c *fiber.Ctx) error {
 	token := c.Get("Authorization")
 	expected := "Bearer " + os.Getenv("CACHE_UPDATE_TOKEN")
+	if expected == "" {
+		log.Fatal("CACHE_UPDATE_TOKEN is not set")
+	}
 	if token != expected {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
 	}
-	data, err := data.GetFileNames()
+	filenames, err := data.GetFileNames()
 	if err != nil {
 		return err
 	}
 
-	filenameCache = sliceToKeyMap(data)
+	filenameCache = sliceToKeyMap(filenames)
+
+	for _, file := range filenames {
+		if file.LastModified.After(lastupdated) {
+			if err = data.GetBlobData(file.Name); err != nil {
+				log.Println("Failed to retrieve blob:", file.Name)
+				continue
+			}
+			log.Println(file.Name, "fetched")
+		}
+	}
 
 	log.Println("Cache updated successfully")
-	return nil
+	lastupdated = time.Now()
+	return c.JSON(filenames)
 }
